@@ -11,7 +11,7 @@ class Box(Space):
     I.e., each coordinate is bounded.
     """
 
-    def __init__(self, low, high, shape=None):
+    def __init__(self, low, high, shape=None, dtype=None):
         """
         Two kinds of valid input:
             Box(-1.0, 1.0, (3,4)) # low and high are scalars, and shape is provided

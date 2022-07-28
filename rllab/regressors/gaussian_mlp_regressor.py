@@ -141,7 +141,7 @@ class GaussianMLPRegressor(LasagnePowered):
 
         means_var = normalized_means_var * y_std_var + y_mean_var
         log_stds_var = normalized_log_stds_var + TT.log(y_std_var)
-
+        
         normalized_old_means_var = (old_means_var - y_mean_var) / y_std_var
         normalized_old_log_stds_var = old_log_stds_var - TT.log(y_std_var)
 

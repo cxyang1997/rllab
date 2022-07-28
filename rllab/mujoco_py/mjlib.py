@@ -5,9 +5,9 @@ from .mjtypes import *
 
 osp = os.path
 if sys.platform.startswith("darwin"):
-    libfile = osp.abspath(osp.join(osp.dirname(__file__),"../../vendor/mujoco/libmujoco131.dylib"))
+    libfile = osp.abspath(osp.join(osp.dirname(__file__),"../../vendor/mujoco/libmujoco210.dylib"))
 elif sys.platform.startswith("linux"):
-    libfile = osp.abspath(osp.join(osp.dirname(__file__),"../../vendor/mujoco/libmujoco131.so"))
+    libfile = osp.abspath(osp.join(osp.dirname(__file__),"../../vendor/mujoco/libmujoco210.so"))
 elif sys.platform.startswith("win"):
     libfile = osp.abspath(osp.join(osp.dirname(__file__),"../../vendor/mujoco/mujoco.lib"))
 else:
@@ -15,7 +15,6 @@ else:
 
 
 mjlib = cdll.LoadLibrary(libfile)
-
 
 mjlib.mj_loadXML.argtypes = [String, String, c_char_p, c_int]
 mjlib.mj_loadXML.restype = POINTER(MJMODEL)
