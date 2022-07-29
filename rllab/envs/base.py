@@ -1,3 +1,4 @@
+from rllab.misc.overrides import overrides
 from .env_spec import EnvSpec
 import collections
 from cached_property import cached_property
@@ -31,6 +32,7 @@ class Env(object):
         raise NotImplementedError
 
     @property
+    @overrides
     def action_space(self):
         """
         Returns a Space object
@@ -39,6 +41,7 @@ class Env(object):
         raise NotImplementedError
 
     @property
+    @overrides
     def observation_space(self):
         """
         Returns a Space object

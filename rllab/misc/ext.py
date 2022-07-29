@@ -195,7 +195,8 @@ def set_seed(seed):
     lasagne.random.set_rng(np.random.RandomState(seed))
     try:
         import tensorflow as tf
-        tf.set_random_seed(seed)
+        # tf.set_random_seed(seed) # tf1.0
+        tf.random.set_seed(seed) # tf2.0
     except Exception as e:
         print(e)
     print((
