@@ -81,6 +81,8 @@ class CartPoleApproxEnv(Env):
         _, self.nn_env = load_model("/home/cyang/vrl/vrl/exp/nn_models/cartpole_continuous_approximation")
         for p in self.nn_env.parameters():
             p.requires_grad = False
+        
+        self.cpo_log_path = f"/home/cyang/vrl/vrl/exp/cartpole/cpo/training.txt"
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)

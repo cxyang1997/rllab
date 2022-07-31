@@ -60,7 +60,10 @@ def run_task(*_):
         )
 
     # safety_constraint = GatherSafetyConstraint(max_value=0.1, baseline=safety_baseline)
-    safety_constraint = CartpoleSafetyConstraint(max_value=1.0, baseline=safety_baseline)
+    safety_constraint = CartpoleSafetyConstraint(
+        max_value=1.0, 
+        lim=0.01, 
+        baseline=safety_baseline)
 
     algo = CPO(
         env=env,
@@ -69,8 +72,8 @@ def run_task(*_):
         safety_constraint=safety_constraint,
         safety_gae_lambda=1,
         batch_size=50000,
-        max_path_length=15,
-        n_itr=100,
+        max_path_length=200,
+        n_itr=2000, # the epoch
         gae_lambda=0.95,
         discount=0.995,
         step_size=trpo_stepsize,

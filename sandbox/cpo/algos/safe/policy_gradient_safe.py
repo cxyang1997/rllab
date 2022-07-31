@@ -310,7 +310,6 @@ class PolicyGradientSafe(BatchPolopt, Serializable):
         )
 
 
-
     @overrides
     def optimize_policy(self, itr, samples_data):
         logger.log('optimizing policy...')
@@ -318,6 +317,7 @@ class PolicyGradientSafe(BatchPolopt, Serializable):
             samples_data,
             "observations", "actions", "advantages", "weights"
             ))
+        # print(f"# PGS[optimize_policy] safety values: {samples_data['safety_values']}")
         if self.safety_constraint:
             all_input_values += tuple(ext.extract(samples_data,"safety_values"))
             self.safety_gradient_rescale.set_value(samples_data['safety_rescale'])

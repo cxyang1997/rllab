@@ -144,6 +144,7 @@ class BaseSampler(Sampler):
             average_discounted_return = \
                 np.mean([path["returns"][0] for path in paths])
 
+            # cx: sum of all the rewards along the paths
             undiscounted_returns = [sum(path["rewards"]) for path in paths]
 
             ent = np.sum(self.algo.policy.distribution.entropy(agent_infos) * valids) / np.sum(valids)
@@ -159,6 +160,7 @@ class BaseSampler(Sampler):
                 env_infos=env_infos,
                 paths=paths,
             )
+        print(f"# BaseSampler[process samples]: {samples_data['safety_values']}")
 
         logger.log("fitting baseline...")
         if hasattr(self.algo.baseline, 'fit_with_samples'):

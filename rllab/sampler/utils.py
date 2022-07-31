@@ -33,7 +33,7 @@ def rollout(env, agent, max_path_length=np.inf, animated=False, speedup=1,
             time.sleep(timestep / speedup)
     if animated and not always_return_paths:
         return
-
+    # cx: return the info of one path until done or max_path_length
     return dict(
         observations=tensor_utils.stack_tensor_list(observations),
         actions=tensor_utils.stack_tensor_list(actions),

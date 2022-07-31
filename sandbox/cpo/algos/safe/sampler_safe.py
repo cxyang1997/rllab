@@ -6,7 +6,7 @@ from rllab.misc import ext
 from rllab.misc import special
 from rllab.misc import tensor_utils
 from rllab.algos import util
-
+from sandbox.cpo.algos.safe.utils import store_training_log
 
 
 def local_truncate_paths(paths, max_samples):
@@ -45,6 +45,7 @@ class BatchSamplerSafe(Sampler):
         self.use_safety_baselines = (self.algo.safety_constraint and 
                                      self.algo.safety_key == 'safety_advantages' and 
                                      hasattr(self.algo.safety_constraint,'baseline'))
+        
 
 
     def start_worker(self):
@@ -100,6 +101,7 @@ class BatchSamplerSafe(Sampler):
 
         if self.algo.safety_constraint:
             self.compute_safety_function_and_statistics()
+            # create safety related attributes
 
         self.compute_epoch_weights()
 
@@ -158,10 +160,10 @@ class BatchSamplerSafe(Sampler):
         for paths in self.experience_replay: 
             for path in paths:
                 path["safety_rewards"] = self.algo.safety_constraint.evaluate(path)
+                # safety_reward: safety constraint evaluate
                 if (hasattr(self.algo.safety_constraint,'get_bonus') and
                     self.algo.safety_constraint.use_bonus):
                     path["safety_bonuses"] = self.algo.safety_constraint.get_bonus(path)
-
     
     def compute_epoch_weights(self):
         """create weights, with highest weight on most recent batch"""
@@ -340,6 +342,7 @@ class BatchSamplerSafe(Sampler):
             if self.use_safety_bonus:
                 safety_key = 'safety_robust' + self.algo.safety_key[6:]
             else:
+                # 'safety_rewards'
                 safety_key = self.algo.safety_key
 
             logger.log("Policy optimization is using safety_key=%s." % safety_key)
@@ -467,7 +470,6 @@ class BatchSamplerSafe(Sampler):
             samples_data['safety_eval'] = safety_eval       # linearization constant
             samples_data['safety_rescale'] = len(samples_data['safety_values']) / sum([len(paths) for paths in self.experience_replay])
 
-
         return samples_data
 
 
@@ -483,7 +485,6 @@ class BatchSamplerSafe(Sampler):
                             [path["agent_infos"] for path in self.experience_replay[-1]]
                             )
         ent = np.mean(self.algo.policy.distribution.entropy(agent_infos))
-
 
         # log everything
         logger.record_tabular('Iteration', itr)
@@ -561,6 +562,7 @@ class BatchSamplerSafe(Sampler):
             logger.record_tabular('SafetyEval',samples_data['safety_eval'])
             """log the true, raw, undiscounted returns, regardless of what we optimize for"""
             safety_returns = np.array([np.sum(path["safety_rewards"]) for path in paths])
+            # print(f"-----safety_returns: {safety_returns}")
             logger.record_tabular('MeanSafety[U]Return', np.mean(safety_returns))
             logger.record_tabular('StdSafety[U]Return', np.std(safety_returns))
             logger.record_tabular('MaxSafety[U]Return', np.max(safety_returns))
@@ -582,6 +584,13 @@ class BatchSamplerSafe(Sampler):
                     logger.record_tabular('NewPathsMeanRobustSafety[U]Return', np.mean(new_safety_robust_returns))
                     logger.record_tabular('NewPathsStdRobustSafety[U]Return', np.std(new_safety_robust_returns))
                     logger.record_tabular('NewPathsMaxRobustSafety[U]Return', np.max(new_safety_robust_returns))
+        
+        log_dict = {
+            'steps': itr * self.algo.max_path_length,
+            'avg_reward': float(np.mean(undiscounted_returns)),
+            'mean_safety': float(np.mean(safety_returns))
+        }
+        store_training_log(self.algo.training_f, log_dict)
 
 
     def get_IS(self,age):

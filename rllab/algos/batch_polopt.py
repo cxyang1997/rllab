@@ -27,6 +27,7 @@ class BatchSampler(BaseSampler):
             max_path_length=self.algo.max_path_length,
             scope=self.algo.scope,
         )
+        # cx: paths: list of path dictionary
         if self.algo.whole_paths:
             return paths
         else:
@@ -118,7 +119,13 @@ class BatchPolopt(RLAlgorithm):
         for itr in range(self.current_itr, self.n_itr):
             with logger.prefix('itr #%d | ' % itr):
                 paths = self.sampler.obtain_samples(itr)
+                # select paths: list of path dict {ober, action, etc.}
                 samples_data = self.sampler.process_samples(itr, paths)
+                # samples_data:  
+                # # safety values: per path, safety evaluation
+                # # safety offsets: mean of safety values
+                # # (center_safety_vals): safety values: safety_values - safety_offset
+                # safety_eval: mean(safety_rewards)
                 self.log_diagnostics(paths)
                 self.optimize_policy(itr, samples_data)
                 logger.log("saving snapshot...")
