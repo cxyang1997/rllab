@@ -251,9 +251,4 @@ class PendulumEnv(Env):
             pygame.display.quit()
             pygame.quit()
             self.isopen = False
-
-    def close(self):
-        if self.viewer:
-            self.viewer.close()
-            self.viewer = None
     

@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 
 sys.path.append(".")
 
@@ -14,13 +15,13 @@ from sandbox.cpo.baselines.gaussian_mlp_baseline import GaussianMLPBaseline
 
 # Environment
 # from sandbox.cpo.envs.mujoco.gather.point_gather_env import PointGatherEnv
-from sandbox.cpo.envs.pendulum import PendulumEnv
+from sandbox.cpo.envs.mountain_car import MountainCarEnv
 
 # Policy optimization
 from sandbox.cpo.algos.safe.cpo import CPO
 from sandbox.cpo.optimizers.conjugate_gradient_optimizer import ConjugateGradientOptimizer
 # from sandbox.cpo.safety_constraints.gather import GatherSafetyConstraint
-from sandbox.cpo.safety_constraints.pendulum import PendulumSafetyConstraint
+from sandbox.cpo.safety_constraints.pendulum import MountainCarSafetyConstraint
 
 
 ec2_mode = False
@@ -30,7 +31,7 @@ def run_task(*_):
     trpo_subsample_factor = 0.2
     
     # env = PointGatherEnv(apple_reward=10,bomb_cost=1,n_apples=2, activity_range=6)
-    env = PendulumEnv()
+    env = MountainCarEnv()
 
     policy = GaussianMLPPolicy(env.spec,
                 hidden_sizes=(64,32)
@@ -60,9 +61,9 @@ def run_task(*_):
         )
 
     # safety_constraint = GatherSafetyConstraint(max_value=0.1, baseline=safety_baseline)
-    safety_constraint = PendulumSafetyConstraint(
+    safety_constraint = MountainCarSafetyConstraint(
         max_value=1.0, 
-        lim=0.4, 
+        lim=-np.pi/3, 
         baseline=safety_baseline)
 
     algo = CPO(
@@ -72,7 +73,7 @@ def run_task(*_):
         safety_constraint=safety_constraint,
         safety_gae_lambda=1,
         batch_size=50000,
-        max_path_length=200,
+        max_path_length=300,
         n_itr=2000, # the epoch
         gae_lambda=0.95,
         discount=0.995,
@@ -88,7 +89,7 @@ run_experiment_lite(
     run_task,
     n_parallel=1,
     snapshot_mode="last",
-    exp_prefix='CPO-Pendulum',
+    exp_prefix='CPO-MountainCar',
     seed=1,
     mode = "ec2" if ec2_mode else "local"
     #plot=True
