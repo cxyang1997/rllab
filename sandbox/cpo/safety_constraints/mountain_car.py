@@ -11,7 +11,7 @@ class MountainCarSafetyConstraint(SafetyConstraint, Serializable):
         self.max_value = max_value
         self.abs_lim = abs_lim
         self.idx = idx
-        self.verification_length = 100
+        self.verification_length = 10
         Serializable.quick_init(self, locals())
         super(MountainCarSafetyConstraint,self).__init__(max_value, **kwargs)
 
