@@ -156,7 +156,12 @@ class PendulumEnv(Env):
             return self._get_obs()
         else:
             return self._get_obs(), {}
-    
+            
+    def _get_obs(self):
+        theta, thetadot = self.state
+        # return np.array([np.cos(theta), np.sin(theta), thetadot], dtype=np.float32)
+        return np.array([theta, thetadot], dtype=np.float32) # do not use the sin theta, because of the safety constraint
+
     def random_action(self):
         return np.array(self.np_random.uniform(low=-1.0, high=1.0, size=(1,)))
 

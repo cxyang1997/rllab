@@ -21,7 +21,7 @@ from sandbox.cpo.envs.mountain_car import MountainCarEnv
 from sandbox.cpo.algos.safe.cpo import CPO
 from sandbox.cpo.optimizers.conjugate_gradient_optimizer import ConjugateGradientOptimizer
 # from sandbox.cpo.safety_constraints.gather import GatherSafetyConstraint
-from sandbox.cpo.safety_constraints.pendulum import MountainCarSafetyConstraint
+from sandbox.cpo.safety_constraints.mountain_car import MountainCarSafetyConstraint
 
 
 ec2_mode = False

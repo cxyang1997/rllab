@@ -1,4 +1,5 @@
 from os import path
+import math
 
 import gym
 # from gym import Env
@@ -151,24 +152,27 @@ class MountainCarEnv(Env):
             symbolic_state = self.nn_dynamics(action, state)
         return symbolic_state
     
-    # TODO: linear approximation of pendulum
+    # The linear approximation of mountain
     def symbolic_dynamics(self, action, state):
-        # TODO: do not add clip option for now
-        # approximate the dynamics 
-        # f(thdot) = f(0) + f'(0)*thdot
-        # f(thdot) = (3/(m * l**2) * g) * dt
-        # f(theta) = f(0) + f'(0)*theta
-        # f(theta) = (thdot * dt) + (3 / (m * l^2) * u * (dt)**2) + theta * (1 + 3 * g / (2 * l) * dt**2 + 3 / (m * l**2) * u * dt**2)
-        g = self.g
-        m = self.m
-        l = self.l
-        dt = self.dt
-        theta = state.select_from_index(1, index0)
-        thdot = state.select_from_index(1, index1)
-        new_thdot = thdot.add((3 / (m * l**2) * g) * dt)
-        new_theta = theta.mul(1 + 3 * g / (2 * l) * (dt)**2).add(theta.mul(action).mul(3 / (m * l**2) * (dt)**2))
-        symbolic_state = new_theta.concatenate(new_thdot)
+        force = force.clamp(self.min_action, self.max_action)
+        position = state.select_from_index(1, index0)
+        velocity = state.select_from_index(1, index1)
 
+        position = position.add(velocity.mul(self.dt))
+        position = position.clamp(self.min_position, self.max_position)
+        velocity = velocity.add((force.sub_l(var(2.5))).mul(var(self.dt))).add(velocity).add(velocity.mul((force.sub_l(var(1.5))).mul(var(self.dt)))) # TODO add the mountain linear approximation
+        velocity = velocity.clamp(-self.max_speed, self.max_speed)
+
+        # neg_pos_idx = position.getInterval().left <= self.min_position
+        # velocity_left, velocity_right = velocity.getInterval().left, velocity.getInterval().right
+        # neg_left_idx = velocity_left <= 0
+        # neg_right_idx = velocity_right <= 0
+        # velocity_left[torch.logical_and(neg_left_idx, neg_pos_idx)] = 0
+        # velocity_right[torch.logical_and(neg_right_idx, neg_pos_idx)] = 0
+        # new_velocity = vrl.domain.Interval(velocity_left, velocity_right)
+        # velocity = new_velocity.getBox()
+
+        symbolic_state = position.concatenate(velocity)
         return symbolic_state
 
     # The NN approximation of cartpole

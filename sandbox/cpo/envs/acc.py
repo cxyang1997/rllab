@@ -68,7 +68,7 @@ class AccEnv(Env):
         position = self.state[0]
         velocity = self.state[1]
         x = position + 0.1 * velocity
-        v = velocity + 0.1 * action + self.rng.normal(loc=0, sccale=0.5)
+        v = velocity + 0.1 * action + self.rng.normal(loc=0, scale=0.5)
         self.state = np.clip(
             np.asarray([x, v]),
             self.observation_space.low,
