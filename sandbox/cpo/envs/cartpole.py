@@ -212,7 +212,7 @@ class CartPoleApproxEnv(Env):
         return symbolic_state
 
     def reset(self):
-        self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
+        self.state = np.array(self.np_random.uniform(low=-0.01, high=0.01, size=(1,)), self.np_random.uniform(low=-0.05, high=0.05, size=(3,)))
         self.steps_beyond_done = None
         return np.array(self.state)
     
