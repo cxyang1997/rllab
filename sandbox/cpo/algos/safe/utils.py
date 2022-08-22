@@ -1,9 +1,12 @@
 import os
+from pathlib import Path
 
 def ini_training_log(file):
     # iterations = epochs
-    if not os.path.exists(file.parent):
-        os.makedirs(file.parent)
+    path = Path(f"{file}")
+    if not os.path.exists(path.parent):
+        os.makedirs(path.parent)
+        print(path.parent)
     f = open(file, 'w')
     return f
 
