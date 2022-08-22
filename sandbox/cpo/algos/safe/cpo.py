@@ -18,6 +18,7 @@ class CPO(PolicyGradientSafe, Serializable):
             safety_tradeoff=False,
             learn_safety_tradeoff_coeff=False,
             max_path_length=None,
+            CPO_version=None,
             **kwargs):
         Serializable.quick_init(self, locals())
         if optimizer is None:
@@ -37,7 +38,7 @@ class CPO(PolicyGradientSafe, Serializable):
                                    learn_safety_tradeoff_coeff=learn_safety_tradeoff_coeff,
                                    max_path_length=max_path_length,
                                    **kwargs)
-        self.cpo_training_log_path = env.cpo_log_path
+        self.cpo_training_log_path = f"{env.cpo_log_path}/{CPO_version}/training.txt"
         self.max_path_length = max_path_length
         self.training_f = ini_training_log(self.cpo_training_log_path)
 

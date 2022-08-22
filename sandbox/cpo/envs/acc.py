@@ -57,7 +57,7 @@ class AccEnv(Env):
             for p in self.nn_env.parameters():
                 p.requires_grad = False
         
-        self.cpo_log_path = f"/home/cyang/vrl/vrl/exp/acc/cpo/training.txt"
+        self.cpo_log_path = f"/home/cyang/vrl/vrl/exp/acc"
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)

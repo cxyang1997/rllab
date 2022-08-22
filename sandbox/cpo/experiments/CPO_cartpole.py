@@ -75,6 +75,7 @@ def run_task(*_):
         safety_gae_lambda=1,
         batch_size=50000,
         max_path_length=200,
+        CPO_version=args.CPO_version,
         n_itr=2000, # the epoch
         gae_lambda=0.95,
         discount=0.995,
@@ -90,7 +91,7 @@ run_experiment_lite(
     run_task,
     n_parallel=1,
     snapshot_mode="last",
-    exp_prefix=f"{args.CPO_version}-Cartpole"
+    exp_prefix=f"{args.CPO_version}-Cartpole",
     seed=1,
     mode = "ec2" if ec2_mode else "local"
     #plot=True

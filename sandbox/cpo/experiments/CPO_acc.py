@@ -22,8 +22,10 @@ from sandbox.cpo.optimizers.conjugate_gradient_optimizer import ConjugateGradien
 # from sandbox.cpo.safety_constraints.gather import GatherSafetyConstraint
 from sandbox.cpo.safety_constraints.acc import AccSafetyConstraint
 
+from sandbox.cpo.experiments.utils import get_args
 
 ec2_mode = False
+args = get_args()
 
 def run_task(*_):
     trpo_stepsize = 0.01
@@ -63,7 +65,9 @@ def run_task(*_):
     safety_constraint = AccSafetyConstraint(
         max_value=1.0, 
         lim=0, 
-        baseline=safety_baseline)
+        baseline=safety_baseline,
+        CPO_version=args.CPO_version,
+        )
 
     algo = CPO(
         env=env,
@@ -73,6 +77,7 @@ def run_task(*_):
         safety_gae_lambda=1,
         batch_size=50000,
         max_path_length=200,
+        CPO_version=args.CPO_version,
         n_itr=2000, # the epoch
         gae_lambda=0.95,
         discount=0.995,
@@ -88,7 +93,7 @@ run_experiment_lite(
     run_task,
     n_parallel=1,
     snapshot_mode="last",
-    exp_prefix='CPO-Pendulum',
+    exp_prefix=f"{args.CPO_version}-acc",
     seed=1,
     mode = "ec2" if ec2_mode else "local"
     #plot=True

@@ -75,7 +75,7 @@ class MountainCarEnv(Env):
             p.requires_grad = False
         # safe area: \position \on [-pi/3, +oo]
         
-        self.cpo_log_path = f"/home/cyang/vrl/vrl/exp/mountain_car/cpo/training.txt"
+        self.cpo_log_path = f"/home/cyang/vrl/vrl/exp/mountain_car"
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)

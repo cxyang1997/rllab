@@ -63,7 +63,7 @@ class PendulumEnv(Env):
             p.requires_grad = False
         # safe area: \thetat \on [-0.4, 0.4]
         
-        self.cpo_log_path = f"/home/cyang/vrl/vrl/exp/pendulum/cpo/training.txt"
+        self.cpo_log_path = f"/home/cyang/vrl/vrl/exp/pendulum"
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)

@@ -1,6 +1,9 @@
+import os
 
 def ini_training_log(file):
     # iterations = epochs
+    if not os.path.exists(file.parent):
+        os.makedirs(file.parent)
     f = open(file, 'w')
     return f
 
