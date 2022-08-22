@@ -161,6 +161,7 @@ class BatchSamplerSafe(Sampler):
             for path in paths:
                 path["safety_rewards"] = self.algo.safety_constraint.evaluate(path)
                 # safety_reward: safety constraint evaluate
+                path["real_safety_rewards"] = self.algo.safety_constraint.evaluate(path)
                 if (hasattr(self.algo.safety_constraint,'get_bonus') and
                     self.algo.safety_constraint.use_bonus):
                     path["safety_bonuses"] = self.algo.safety_constraint.get_bonus(path)
@@ -585,10 +586,13 @@ class BatchSamplerSafe(Sampler):
                     logger.record_tabular('NewPathsStdRobustSafety[U]Return', np.std(new_safety_robust_returns))
                     logger.record_tabular('NewPathsMaxRobustSafety[U]Return', np.max(new_safety_robust_returns))
         
+        real_safety_returns = np.array([np.sum(path["real_safety_rewards"]) for path in paths])
         log_dict = {
             'steps': itr * self.algo.max_path_length,
             'avg_reward': float(np.mean(undiscounted_returns)),
-            'mean_safety': float(np.mean(safety_returns))
+            'mean_safety': float(np.mean(safety_returns)),
+            'real_mean_safety': float(np.mean(real_safety_returns))
+
         }
         store_training_log(self.algo.training_f, log_dict)
 

@@ -13,17 +13,17 @@ from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
 from sandbox.cpo.baselines.gaussian_mlp_baseline import GaussianMLPBaseline
 
 # Environment
-# from sandbox.cpo.envs.mujoco.gather.point_gather_env import PointGatherEnv
 from sandbox.cpo.envs.cartpole import CartPoleApproxEnv
 
 # Policy optimization
 from sandbox.cpo.algos.safe.cpo import CPO
 from sandbox.cpo.optimizers.conjugate_gradient_optimizer import ConjugateGradientOptimizer
-# from sandbox.cpo.safety_constraints.gather import GatherSafetyConstraint
 from sandbox.cpo.safety_constraints.cartpole import CartpoleSafetyConstraint
 
+from sandbox.cpo.experiments.utils import get_args
 
 ec2_mode = False
+args = get_args()
 
 def run_task(*_):
     trpo_stepsize = 0.01
@@ -63,7 +63,9 @@ def run_task(*_):
     safety_constraint = CartpoleSafetyConstraint(
         max_value=1.0, 
         lim=0.01, 
-        baseline=safety_baseline)
+        baseline=safety_baseline,
+        CPO_version=args.CPO_version,
+        )
 
     algo = CPO(
         env=env,
@@ -88,9 +90,8 @@ run_experiment_lite(
     run_task,
     n_parallel=1,
     snapshot_mode="last",
-    exp_prefix='CPO-Cartpole',
+    exp_prefix=f"{args.CPO_version}-Cartpole"
     seed=1,
     mode = "ec2" if ec2_mode else "local"
     #plot=True
 )
-
