@@ -161,7 +161,7 @@ class BatchSamplerSafe(Sampler):
             for path in paths:
                 path["safety_rewards"] = self.algo.safety_constraint.evaluate(path)
                 # safety_reward: safety constraint evaluate
-                path["real_safety_rewards"] = self.algo.safety_constraint.evaluate(path)
+                path["real_safety_rewards"] = self.algo.safety_constraint.evaluate(path, verifiable_safety_res=True)
                 if (hasattr(self.algo.safety_constraint,'get_bonus') and
                     self.algo.safety_constraint.use_bonus):
                     path["safety_bonuses"] = self.algo.safety_constraint.get_bonus(path)

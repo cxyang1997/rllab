@@ -48,6 +48,7 @@ class PendulumEnv(Env):
         self.screen = None
         self.clock = None
         self.isopen = True
+        self.ini_high = np.array([0.01, 0.001])
 
         self.screen_dim = 500
         self.action_space = spaces.Box(
@@ -149,8 +150,8 @@ class PendulumEnv(Env):
         return_info: bool = False,
     ):
         # super().reset(seed=seed)
-        high = np.array([np.pi, 1])
-        self.state = self.np_random.uniform(low=-high, high=high)
+        
+        self.state = self.np_random.uniform(low=-self.ini_high, high=self.ini_high)
         self.last_u = None
         if not return_info:
             return self._get_obs()
