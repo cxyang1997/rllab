@@ -19,7 +19,7 @@ class AccSafetyConstraint(SafetyConstraint, Serializable):
     def evaluate(self, path, verifiable_safety_res=False):
         # measure the first 100 steps \in [-oo, 0)
         if verifiable_safety_res:
-            safety_res = np.abs(path['observations'][:self.verification_length, self.idx]) < self.lim
+            safety_res = path['observations'][:self.verification_length, self.idx] < self.lim
         else:
             if path['observations'].shape[0] > self.verification_length:
                 if self.CPO_version == 'CPO':

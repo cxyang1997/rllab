@@ -12,16 +12,18 @@ class CartpoleSafetyConstraint(SafetyConstraint, Serializable):
         self.abs_lim = abs_lim
         self.idx = idx
         self.verification_length = 10
-        self.CPO_version = CPO_version # ['CPO', 'CPO_unsafety', 'CPO_safety']
+        self.CPO_version = CPO_version # ['CPO', 'CPO_unsafety', 'CPO_safety', 'CPO_no_safety']
         Serializable.quick_init(self, locals())
         super(CartpoleSafetyConstraint,self).__init__(max_value, **kwargs)
 
-    def evaluate(self, path, verifiable_safety_res=False):
+    def evaluate(self, path, verifiable_safety_res=False): # calculate the safety cost
         # measure the first 10 steps \in [-0.05, 0.05]
         # this is used as a cost signal
         # cost: unsafe; no cost: safe
         if verifiable_safety_res: # The safety metrics in VRL
             safety_res = np.abs(path['observations'][:self.verification_length, self.idx]) <= self.lim
+        elif self.CPO_version == 'CPO_no_safety':
+            safety_res = np.abs(path['observations'][:, self.idx]) < 0 # all cost == 0
         else:
             if path['observations'].shape[0] > self.verification_length:
                 if self.CPO_version == 'CPO':

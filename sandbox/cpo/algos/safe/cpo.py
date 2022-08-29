@@ -26,7 +26,6 @@ class CPO(PolicyGradientSafe, Serializable):
                 optimizer_args = dict()
             optimizer = ConjugateConstraintOptimizer(**optimizer_args)
 
-
         if 'safety_constrained_optimizer' in kwargs.keys():
             kwargs.pop('safety_constrained_optimizer')
 

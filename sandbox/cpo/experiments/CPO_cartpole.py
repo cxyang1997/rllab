@@ -90,7 +90,7 @@ def run_task(*_):
 run_experiment_lite(
     run_task,
     n_parallel=1,
-    snapshot_mode="last",
+    snapshot_mode="all",
     exp_prefix=f"{args.CPO_version}-Cartpole",
     seed=1,
     mode = "ec2" if ec2_mode else "local"
